@@ -12,6 +12,7 @@ import java.util.List;
 * 2 использовать функции обьекта приложения
 * 3 проверить ошибки
 * */
+
 public class Main {
 
     public static void main(String[] args) {
