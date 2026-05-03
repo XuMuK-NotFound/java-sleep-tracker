@@ -17,7 +17,7 @@ public class SleepDataLoader {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
 
     public static List<SleepingSession> loadFromFile(String filePath) throws IOException {
-        // Простая проверка пути
+
         String path = Optional.ofNullable(filePath)
                 .filter(p -> !p.isBlank())
                 .orElseThrow(() -> new IllegalArgumentException("Путь к файлу не указан"));
@@ -41,7 +41,6 @@ public class SleepDataLoader {
     private static SleepingSession parseSession(String line) {
         String[] parts = line.split(";");
 
-        // Берем данные как есть
         LocalDateTime start = LocalDateTime.parse(parts[0].trim(), FORMATTER);
         LocalDateTime end = LocalDateTime.parse(parts[1].trim(), FORMATTER);
         QualitySleepTypes quality = QualitySleepTypes.valueOf(parts[2].trim());

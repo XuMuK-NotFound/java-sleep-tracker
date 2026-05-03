@@ -7,7 +7,6 @@ public enum ChronoTypeOfSleep { // Название класса с большо
 
     private final String translateToRussian;
 
-    // Конструктор Enum всегда приватный по умолчанию
     ChronoTypeOfSleep(String translateToRussian) {
         this.translateToRussian = translateToRussian;
     }

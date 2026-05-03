@@ -8,12 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-/*
- *  Апп просто выполняет задачи по сборке функций
- * */
 public class SleepTrackerApp {
 
-    // Сбор всех функций в одну кучу (Реестр)
     public final List<Function<List<SleepingSession>, SleepAnalysisResult>> analysisFunctions;
 
     public SleepTrackerApp() {

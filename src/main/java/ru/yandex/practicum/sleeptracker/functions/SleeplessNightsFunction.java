@@ -35,7 +35,6 @@ public class SleeplessNightsFunction implements Function<List<SleepingSession>, 
                 .flatMap(session -> getNightDates(session).stream())
                 .collect(Collectors.toSet());
 
-        // Поиск периода (начало и конец)
         Optional<LocalDateTime> firstStart = sessions.stream()
                 .map(SleepingSession::getSleepStart)
                 .min(LocalDateTime::compareTo);
@@ -55,7 +54,6 @@ public class SleeplessNightsFunction implements Function<List<SleepingSession>, 
             return new SleepAnalysisResult(DESCRIPTION, 0L);
         }
 
-        // Счет времени
         long totalNights = ChronoUnit.DAYS.between(firstNight, lastNight) + 1;
         long sleeplessNights = Math.max(0, totalNights - nightsWithSleep.size());
 
@@ -96,7 +94,7 @@ public class SleeplessNightsFunction implements Function<List<SleepingSession>, 
         LocalDate endDate = session.getSleepEnd().toLocalDate();
         LocalTime startTime = session.getSleepStart().toLocalTime();
         LocalTime endTime = session.getSleepEnd().toLocalTime();
-        // если одно условие верно то сон ночной
+
         return !startDate.equals(endDate)
                 || startTime.isBefore(NIGHT_END)
                 || endTime.isBefore(NIGHT_END)

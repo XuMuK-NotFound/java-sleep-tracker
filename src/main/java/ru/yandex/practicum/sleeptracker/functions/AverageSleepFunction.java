@@ -27,7 +27,7 @@ public class AverageSleepFunction implements Function<List<SleepingSession>, Sle
                             DF.format(average)
                     );
                 })
-                // Обработка случая, если список null или пуст
+
                 .orElseGet(() -> new SleepAnalysisResult(
                         "Средняя продолжительность сна в минутах",
                         "Данные отсутствуют."

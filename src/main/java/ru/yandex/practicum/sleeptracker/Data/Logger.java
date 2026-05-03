@@ -5,10 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-/*
- * Логгер сохранит все ошибки для следующих наработок
- * лучше использовать IOException если например программу трекера захотят адаптировать на часы
- * */
+
 public class Logger {
     private final File commonLog;
 
@@ -23,7 +20,6 @@ public class Logger {
             writer.write("Time: " + time + "\n");
             writer.write("=".repeat(20) + "\n");
         } catch (IOException ignored) {
-            // Если даже логгер упал, ничего не поделаешь
         }
     }
 }
