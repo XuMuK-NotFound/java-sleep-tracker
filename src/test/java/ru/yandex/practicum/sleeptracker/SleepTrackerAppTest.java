@@ -1,5 +1,6 @@
 package ru.yandex.practicum.sleeptracker;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.sleeptracker.enums.ChronoTypeOfSleep;
 import ru.yandex.practicum.sleeptracker.enums.QualitySleepTypes;
@@ -17,13 +18,11 @@ public class SleepTrackerAppTest {
 
     private List<SleepingSession> createTestSessions() {
         List<SleepingSession> sessions = new ArrayList<>();
-        // 9 часов (540 мин)
         sessions.add(new SleepingSession(
                 LocalDateTime.of(2025, 10, 1, 22, 0),
                 LocalDateTime.of(2025, 10, 2, 7, 0),
                 QualitySleepTypes.GOOD
         ));
-        // 50 минут (короткий сон)
         sessions.add(new SleepingSession(
                 LocalDateTime.of(2025, 10, 3, 12, 0),
                 LocalDateTime.of(2025, 10, 3, 12, 50),
@@ -33,15 +32,15 @@ public class SleepTrackerAppTest {
     }
 
     @Test
+    @DisplayName("Общее количество сессий сна")
     public void testTotalSessions() {
         TotalSessionsFunction function = new TotalSessionsFunction();
-        // Проверка на данных
         assertEquals(2L, function.apply(createTestSessions()).getValue(), "Должно быть 2 сессии");
-        // Проверка на null
         assertEquals(0L, function.apply(null).getValue(), "Для null должно быть 0");
     }
 
     @Test
+    @DisplayName("Минимальный сон")
     public void testMinSleep() {
         MinSleepFunction function = new MinSleepFunction();
         assertEquals(50L, function.apply(createTestSessions()).getValue(), "Минимум 50 мин");
@@ -49,6 +48,7 @@ public class SleepTrackerAppTest {
     }
 
     @Test
+    @DisplayName("Максимальный сон")
     public void testMaxSleep() {
         MaxSleepFunction function = new MaxSleepFunction();
         assertEquals(540L, function.apply(createTestSessions()).getValue(), "Максимум 540 мин");
@@ -58,21 +58,19 @@ public class SleepTrackerAppTest {
     // ### ТЕСТЫ ДЛЯ СРЕДНЕЙ ДЛИТЕЛЬНОСТИ (AverageSleepFunction) ###
 
     @Test
+    @DisplayName("Счет в минутах")
     public void testAverageSleep_Calculation() {
         List<SleepingSession> sessions = new ArrayList<>();
-        // 10 часов = 600 мин
         sessions.add(new SleepingSession(
                 LocalDateTime.of(2025, 10, 1, 20, 0),
                 LocalDateTime.of(2025, 10, 2, 6, 0),
                 QualitySleepTypes.GOOD
         ));
-        // 6 часов = 360 мин
         sessions.add(new SleepingSession(
                 LocalDateTime.of(2025, 10, 2, 22, 0),
                 LocalDateTime.of(2025, 10, 3, 4, 0),
                 QualitySleepTypes.GOOD
         ));
-        // Среднее: (600 + 360) / 2 = 480
 
         AverageSleepFunction function = new AverageSleepFunction();
         SleepAnalysisResult result = function.apply(sessions);
@@ -82,6 +80,7 @@ public class SleepTrackerAppTest {
     }
 
     @Test
+    @DisplayName("Проверка счета на пустоту")
     public void testAverageSleep_Empty() {
         AverageSleepFunction function = new AverageSleepFunction();
         assertEquals("Данные отсутствуют.", function.apply(null).getValue(),
@@ -91,6 +90,7 @@ public class SleepTrackerAppTest {
     // ### ТЕСТЫ ДЛЯ ПЛОХОГО КАЧЕСТВА (BadQualityFunction) ###
 
     @Test
+    @DisplayName("Счетчик плохого сна")
     public void testBadQuality_Count() {
         List<SleepingSession> sessions = new ArrayList<>();
         sessions.add(new SleepingSession(
@@ -109,6 +109,7 @@ public class SleepTrackerAppTest {
     }
 
     @Test
+    @DisplayName("Пустота в списке плохого сна")
     public void testBadQuality_NullList() {
         BadQualityFunction function = new BadQualityFunction();
         assertEquals(0L, function.apply(null).getValue(), "Для null списка результат должен быть 0");
@@ -117,9 +118,9 @@ public class SleepTrackerAppTest {
     // ### ТЕСТЫ ДЛЯ ХРОНОТИПА (ChronoTypeFunction) ###
 
     @Test
+    @DisplayName("Вывод хронотипа")
     public void testChronoType_Owl() {
         List<SleepingSession> sessions = new ArrayList<>();
-        // Ложимся поздно (23:30), встаем поздно (09:30) -> Типичная сова
         sessions.add(new SleepingSession(
                 LocalDateTime.of(2025, 10, 1, 23, 30),
                 LocalDateTime.of(2025, 10, 2, 9, 30),
@@ -133,25 +134,47 @@ public class SleepTrackerAppTest {
     }
 
     @Test
+    @DisplayName("Голубь при равенстве дней Совы и Жаворонка")
+    public void testChronoType_DoveEquality() {
+        List<SleepingSession> sessions = new ArrayList<>();
+
+        sessions.add(new SleepingSession(
+                LocalDateTime.of(2025, 10, 1, 23, 30),
+                LocalDateTime.of(2025, 10, 2, 9, 30),
+                QualitySleepTypes.GOOD
+        ));
+
+        sessions.add(new SleepingSession(
+                LocalDateTime.of(2025, 10, 2, 21, 0),
+                LocalDateTime.of(2025, 10, 3, 5, 0),
+                QualitySleepTypes.GOOD
+        ));
+
+        ChronoTypeFunction function = new ChronoTypeFunction();
+        SleepAnalysisResult result = function.apply(sessions);
+
+        assertEquals(ChronoTypeOfSleep.DOVE, result.getValue(),
+                "Совы = Жаворонкам, должен получиться Голубь");
+    }
+
+    @Test
+    @DisplayName("Вывод голубя по умолчанию")
     public void testChronoType_Empty() {
         ChronoTypeFunction function = new ChronoTypeFunction();
-        // Если данных нет, по умолчанию возвращаем Голубя
         assertEquals(ChronoTypeOfSleep.DOVE, function.apply(null).getValue());
     }
 
     // ### ТЕСТЫ ДЛЯ БЕССОННЫХ НОЧЕЙ (SleeplessNightsFunction) ###
 
     @Test
+    @DisplayName("Счетчик плохого сна")
     public void testSleeplessNights_Calculation() {
         List<SleepingSession> sessions = new ArrayList<>();
-        // Ночь №1: поспали
         sessions.add(new SleepingSession(
                 LocalDateTime.of(2025, 10, 1, 22, 0),
                 LocalDateTime.of(2025, 10, 2, 6, 0),
                 QualitySleepTypes.GOOD
         ));
-        // Ночь 2: пропустили
-        // Ночь 3: поспали
         sessions.add(new SleepingSession(
                 LocalDateTime.of(2025, 10, 3, 22, 0),
                 LocalDateTime.of(2025, 10, 4, 6, 0),
@@ -165,6 +188,7 @@ public class SleepTrackerAppTest {
     }
 
     @Test
+    @DisplayName("Вывод нуля если нет бессонных ночей")
     public void testSleeplessNights_NoData() {
         SleeplessNightsFunction function = new SleeplessNightsFunction();
         assertEquals(0L, function.apply(new ArrayList<>()).getValue(),

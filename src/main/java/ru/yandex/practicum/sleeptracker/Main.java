@@ -10,8 +10,12 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-        String filePath = "src/main/resources/sleep_log.txt";
+        if (args.length == 0) {
+            System.out.println("Укажите путь к файлу с логом сна в аргументах запуска.");
+            return;
+        }
 
+        String filePath = args[0];
         Logger logger = new Logger(new File("commonLog.txt"));
         SleepTrackerApp app = new SleepTrackerApp();
 
@@ -31,3 +35,6 @@ public class Main {
     }
 
 }
+
+
+

@@ -11,6 +11,7 @@ import java.util.function.Function;
 public class AverageSleepFunction implements Function<List<SleepingSession>, SleepAnalysisResult> {
 
     private static final DecimalFormat DF = new DecimalFormat("0.00");
+    private static final String DESCRIPTION = "Средняя продолжительность сна в минутах";
 
     @Override
     public SleepAnalysisResult apply(List<SleepingSession> sessions) {
@@ -22,14 +23,14 @@ public class AverageSleepFunction implements Function<List<SleepingSession>, Sle
                             .average()
                             .orElse(0.0);
 
-                    return new SleepAnalysisResult(
-                            "Средняя продолжительность сна в минутах",
+                    return new SleepAnalysisResult(DESCRIPTION
+                            ,
                             DF.format(average)
                     );
                 })
 
                 .orElseGet(() -> new SleepAnalysisResult(
-                        "Средняя продолжительность сна в минутах",
+                        DESCRIPTION,
                         "Данные отсутствуют."
                 ));
     }
