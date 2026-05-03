@@ -23,8 +23,7 @@ public class AverageSleepFunction implements Function<List<SleepingSession>, Sle
                             .average()
                             .orElse(0.0);
 
-                    return new SleepAnalysisResult(DESCRIPTION
-                            ,
+                    return new SleepAnalysisResult(DESCRIPTION,
                             DF.format(average)
                     );
                 })
